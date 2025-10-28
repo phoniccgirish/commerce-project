@@ -30,7 +30,7 @@ const Navbar = () => {
           to='/'
           className='text-2xl font-bold text-white tracking-tight flex items-center gap-1'
         >
-          Exoticc
+          Exoticc.
           <span className='text-[#38BDF8]'>.</span>
         </Link>
 
