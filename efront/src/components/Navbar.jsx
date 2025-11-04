@@ -72,7 +72,7 @@ const Navbar = () => {
               )}
 
               <span className='text-gray-300 font-medium ml-2 hidden lg:inline'>
-                Hi, {user.name || user.storeName}
+                {user.name || user.storeName}
               </span>
 
               <button
