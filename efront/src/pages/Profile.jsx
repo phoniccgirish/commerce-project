@@ -24,8 +24,6 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // setAlert(null); // 👈 Removed
-
     try {
       const { data: updatedUser } = await updateUserAddress(address);
       updateUserState(updatedUser);

@@ -6,36 +6,23 @@ import React, {
   useCallback,
 } from "react";
 import { useNavigate } from "react-router-dom";
-// 1. Import getAuthStatus instead of getUserProfile
-import { getAuthStatus /*, logoutUser */ } from "../services/api";
+import { getAuthStatus } from "../services/api";
 
-// Create context
 const AuthContext = createContext();
-
-// Define the hook
 function useAuth() {
-  // Using function declaration
   return useContext(AuthContext);
 }
-
-// Define the provider
 function AuthProvider({ children }) {
-  // Using function declaration
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  // Renamed function for clarity
   const checkAuthStatus = useCallback(async () => {
     setLoading(true);
     try {
-      // 2. Call the correct endpoint: getAuthStatus()
       const { data } = await getAuthStatus();
-      // If successful, data contains { _id, email, role }
       setUser(data);
-      localStorage.setItem("user", JSON.stringify(data)); // Store for display
+      localStorage.setItem("user", JSON.stringify(data));
     } catch (error) {
-      // Any error from /status means not authenticated
       console.log(
         "Auth check failed (Not logged in):",
         error.response?.data?.message || error.message
@@ -45,11 +32,11 @@ function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, []); // useCallback dependency array is empty
+  }, []);
 
   useEffect(() => {
-    checkAuthStatus(); // Call the corrected check function
-  }, [checkAuthStatus]); // useEffect depends on the stable checkAuthStatus function
+    checkAuthStatus();
+  }, [checkAuthStatus]);
 
   const loginAction = (userData) => {
     setUser(userData);

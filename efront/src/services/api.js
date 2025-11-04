@@ -19,18 +19,14 @@ export const getUserProfile = () => API.get("/auth/profile");
 export const updateUserAddress = (addressData) =>
   API.put("/auth/profile/address", addressData);
 
-// --- FIX: OTP Functions (Standardized API call pattern) ---
-
 export const sendOtp = async (emailData) => {
   try {
     const response = await API.post("/auth/send-otp", emailData);
     return response.data; // Return success data
   } catch (error) {
-    // Throw the error for the component to catch and display the toast message
     throw error;
   }
 };
-
 export const verifyOtpAndRegister = async (registrationData) => {
   try {
     const response = await API.post(
@@ -46,7 +42,6 @@ export const verifyOtpAndRegister = async (registrationData) => {
 export const googleLoginApi = (tokenData) =>
   API.post("/auth/google", tokenData);
 
-// --- PRODUCTS ---
 export const fetchProducts = async () => {
   try {
     const res = await API.get("/products");
