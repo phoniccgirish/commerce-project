@@ -1,10 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import path from "path"; // <-- Re-add the path module import
-import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react()],
   server: {
     port: 5173,
     proxy: {
@@ -14,16 +13,11 @@ export default defineConfig({
       },
     },
   },
-
   optimizeDeps: {
     include: ["firebase/app", "firebase/auth"],
   },
-
-  // --- CRITICAL FINAL FIX: EXPLICIT ALIASES ---
   resolve: {
     alias: [
-      // Use path.resolve to get the absolute path to node_modules/firebase
-      // This bypasses Vite's confused internal module scanning logic.
       {
         find: /^firebase\/app$/,
         replacement: path.resolve(__dirname, "node_modules/firebase/app"),
@@ -34,5 +28,5 @@ export default defineConfig({
       },
     ],
   },
-  // --- END CRITICAL FINAL FIX ---
+  base: "./", // ✅ ensures assets load correctly on Vercel
 });
