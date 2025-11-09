@@ -12,58 +12,61 @@ import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
-// Load env vars
+// Load env variables
 dotenv.config();
 
-// Connect to Database
+// Connect to MongoDB
 connectDB();
 
 const app = express();
 
-// ✅ Security Middlewares
+// Security middlewares
 app.use(helmet());
 
-// ✅ CORS Configuration (works locally & online)
+// CORS setup
 const allowedOrigins = [
-  "http://localhost:5173", // Local frontend
-  "https://commerce-project-rose.vercel.app", // Production frontend
+  "http://localhost:5173", // local frontend
+  "https://commerce-project-kappa.vercel.app", // production frontend
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (e.g., mobile apps, Postman)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
       return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true, // Allow cookies
+    credentials: true,
   })
 );
 
-// ✅ Rate Limiter
+// Rate limiter
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 150,
-  message: "Too many requests from this IP, please try again after 15 minutes",
+  message: "Too many requests from this IP, please try again later.",
 });
 app.use("/api", limiter);
 
-// ✅ Standard Middlewares
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ API Routes
-app.get("/", (req, res) => res.send("Backend is running ✅"));
+// Routes
+app.get("/", (req, res) =>
+  res.send("✅ Backend is running successfully on Vercel!")
+);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 
-// ✅ Server
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`)
-);
+// 🔹 Local development mode only
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5001;
+  app.listen(PORT, () => console.log(`Server running locally on port ${PORT}`));
+}
+
+// 🔹 Export the app for Vercel serverless
+export default app;
