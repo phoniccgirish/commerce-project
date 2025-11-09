@@ -23,6 +23,9 @@ const app = express();
 // Security middlewares
 app.use(helmet());
 
+// ✅ Ignore favicon.ico requests to prevent 500 errors
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
 // CORS setup
 const allowedOrigins = [
   "http://localhost:5173", // local frontend
@@ -62,11 +65,11 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 
-// 🔹 Local development mode only
+// 🔹 Local development only
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5001;
   app.listen(PORT, () => console.log(`Server running locally on port ${PORT}`));
 }
 
-// 🔹 Export the app for Vercel serverless
+// 🔹 Export app for Vercel serverless
 export default app;
